@@ -1,51 +1,29 @@
 package pl.dev.revelboot.dict
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 import pl.dev.revelboot.dict.provider.ContentProviderResponse
 
-import javax.servlet.ServletConfig
-import javax.servlet.ServletException
-import javax.servlet.annotation.WebServlet
-import javax.servlet.http.HttpServlet
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
-import java.nio.charset.Charset
-import java.nio.charset.StandardCharsets
+@RestController
+class DictAdapterServlet {
 
-@WebServlet(urlPatterns = ['/api'])
-class DictAdapterServlet extends HttpServlet {
+    private static final Logger log = LoggerFactory.getLogger(DictAdapterServlet)
 
     private ServiceProviderManager serviceProviderManager = new ServiceProviderManager()
 
-    @Override
-    void init(ServletConfig config) throws ServletException {
-        super.init(config)
-        serviceProviderManager.init()
-    }
+    @GetMapping("/api")
+    def findAllEntries(@RequestParam String query) {
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        String query = req.parameterMap['query']?.first()
-
-        def mapper = new ObjectMapper()
-
-        List<ContentProviderResponse> body = serviceProviderManager.getProviders()
+         List<ContentProviderResponse> body = serviceProviderManager.getProviders()
                 .collect { service -> service.request(query) }
                 .findResults { it?.get()}
 
-        def responseBody = mapper.writeValueAsString(body)
 
-        resp.setStatus(200)
-        resp.setCharacterEncoding("UTF-8")
-        resp.setContentType("application/json")
-        resp.addHeader("Access-Control-Allow-Origin","*")
-
-        if (responseBody) {
-            resp.setContentLength(responseBody.getBytes("UTF-8").length)
-
-            resp.writer.write(responseBody)
-            resp.writer.flush()
-        }
+        return new ResponseEntity<>(body, HttpStatus.OK)
    }
 }

@@ -1,7 +1,3 @@
 rootProject.name = 'dict-adapter'
 include 'dict-adapter-core'
-include 'dict-provider-api'
-include 'dict-provider-diki'
-include 'dict-provider-vocabulary'
-include 'dict-provider-oxford'
 
