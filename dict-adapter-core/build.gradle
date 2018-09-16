@@ -45,3 +45,12 @@ dependencies {
 bootJar {
     launchScript()
 }
+
+
+task deployVPS(type:Exec) {
+
+    // Deploy artifact on the remote host
+    commandLine 'c:\\Program Files\\Git\\bin\\sh.exe', 'deploy.sh'
+}
+
+deployVPS.dependsOn(bootJar)

@@ -49,7 +49,7 @@ class OxfordContentProviderService implements ContentProviderService {
             CloseableHttpResponse response = httpClient.execute(httpGet)
             try {
                 if (response.statusLine.statusCode != 200) {
-                    println("Invalid response: ${response.statusLine.statusCode }")
+                    println("Invalid response: ${response.statusLine.statusCode}")
                     return null
                 }
                 return JsonPath.using(configuration).parse(response.getEntity().content)
@@ -69,7 +69,7 @@ class OxfordContentProviderService implements ContentProviderService {
             CloseableHttpResponse response = httpClient.execute(httpGet)
             try {
                 if (response.statusLine.statusCode != 200) {
-                    println("Invalid response: ${response.statusLine.statusCode }")
+                    println("Invalid response: ${response.statusLine.statusCode}")
                     return null
                 }
                 return JsonPath.using(configuration).parse(response.getEntity().content)
@@ -80,14 +80,17 @@ class OxfordContentProviderService implements ContentProviderService {
 
         def async = asyncEntries.thenCombineAsync(asyncSynonyms, { retrieveEntry, thesaurus ->
 
-            if (retrieveEntry == null || thesaurus == null) {
+            if (retrieveEntry == null) {
                 return null
             }
 
-            List<String> synonyms  = Arrays.asList(
-                    thesaurus.read('$.results[*].lexicalEntries[*].entries[*].senses[*].synonyms[*].text'),
-                    thesaurus.read('$.results[*].lexicalEntries[*].entries[*].senses[*].subsenses[*].synonyms[*].text')
-            ).flatten()
+            List<String> synonyms = null
+            if (thesaurus != null) {
+                synonyms = Arrays.asList(
+                        thesaurus.read('$.results[*].lexicalEntries[*].entries[*].senses[*].synonyms[*].text'),
+                        thesaurus.read('$.results[*].lexicalEntries[*].entries[*].senses[*].subsenses[*].synonyms[*].text')
+                ).flatten()
+            }
 
             List<String> definitions = Arrays.asList(
                     retrieveEntry.read('$.results[*].lexicalEntries[*].entries[*].senses[*].definitions[*]'),
@@ -96,7 +99,7 @@ class OxfordContentProviderService implements ContentProviderService {
                     retrieveEntry.read('$.results[*].lexicalEntries[*].entries[*].senses[*].subsenses[*].short_definitions[*]')
             ).flatten()
 
-            List<URLAudioStream> urlAudioStreams = retrieveEntry.read('$.results[*].lexicalEntries[*].pronunciations[*].audioFile')
+            List<URLAudioStream> urlAudioStreams = retrieveEntry.read('$.results[*].lexicalEntries[*].pronunciations[*].audioFile').findAll { it!= null }
                     .collect { new URLAudioStream(it, query) }
 
             return new ContentProviderResponse(PROVIDER_ID, OXFORD_ENDPOINT_URL, query, "", definitions, synonyms, urlAudioStreams, [])
@@ -107,7 +110,8 @@ class OxfordContentProviderService implements ContentProviderService {
 
     static void main(String[] args) {
 //        def responseFuture = new OxfordContentProviderService().request("invert")
-        def responseFuture = new OxfordContentProviderService().request("invert")
+//        def responseFuture = new OxfordContentProviderService().request("invert")
+        def responseFuture = new OxfordContentProviderService().request("infatuate")
 
         def contentProviderResponse = responseFuture.get()
         println(contentProviderResponse)
