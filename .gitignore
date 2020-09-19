@@ -1,5 +1,8 @@
 .gradle/
 .idea/
-target/**
 
-
+target/
+dict-adapter-core/project/project/target/
+dict-adapter-core/project/target/
+dict-adapter-core/target/
+project/target/
