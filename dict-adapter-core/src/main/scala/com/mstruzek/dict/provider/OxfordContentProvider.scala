@@ -20,8 +20,8 @@ object OxfordContentProviderService extends ContentProvider {
 
   private val OXFORD_ENDPOINT_URL = "https://od-api.oxforddictionaries.com:443/api/v2/"
 
-  private val OXFORD_APP_ID = "6b300d5f"
-  private val OXFORD_APP_KEY = "be5ef236f8aba9e416abb51e27960ea0"
+  private val OXFORD_APP_ID = ""
+  private val OXFORD_APP_KEY = ""
   private val PROVIDER_ID = "en.oxforddictionaries.com"
 
   private val httpClient = HttpClients.createDefault()
