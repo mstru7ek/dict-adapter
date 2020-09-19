@@ -1,0 +1,1 @@
+name := "dict-adapter-core"
