@@ -1,0 +1,2 @@
+*.groovy linguist-detectable=true
+*.scala linguist-detectable=true
