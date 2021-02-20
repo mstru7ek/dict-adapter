@@ -1,3 +1,0 @@
-rootProject.name = 'dict-adapter'
-include 'dict-adapter-core'
-
