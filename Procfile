@@ -1,0 +1,1 @@
+web: java -cp targer/dependency -jar target/mgazeta-0.0.1-SNAPSHOT.jar
