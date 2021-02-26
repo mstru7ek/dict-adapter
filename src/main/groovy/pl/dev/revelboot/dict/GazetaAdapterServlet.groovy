@@ -23,6 +23,10 @@ class GazetaAdapterServlet {
     @GetMapping("/api")
     def grabContent() {
         def response = contentProvider.request().get();
+
+        def message = "${response.getDate()} ; ${response.getTitle()} ; ${response.getDaily()}"
+
+        SandMail.message("mstru7ek@gmail.com", "gazeta.pl", message);
         return new ResponseEntity<>(response, HttpStatus.OK)
    }
 }
