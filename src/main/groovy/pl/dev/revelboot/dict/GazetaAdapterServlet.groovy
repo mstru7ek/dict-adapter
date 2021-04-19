@@ -21,7 +21,7 @@ class GazetaAdapterServlet {
 
     private ContentProviderService contentProvider = new GazetaProviderService()
 
-    private static final def VALID_TO = ["mmstruzek.atm@gmail.com"]
+    private static final def VALID_TO = ["michal.struzek@gmail.com", "kasia.struzek@gmail.com"]
 
     @GetMapping("/api")
     def grabContent(@RequestParam("mailTo") String mailTo) {
